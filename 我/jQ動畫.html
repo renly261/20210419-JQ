@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #principal {
+            position: relative;
+        }
+    </style>
+</head>
+
+
+<body>
+    <script src="./jquery-3.6.0.min.js"></script>
+
+    <img src="./0102.jpg" alt="" id="principal">
+
+    <br>
+
+    <input type="button" value="變大" id="big">
+    <input type="button" value="移動" id="move">
+    <input type="button" value="淡入" id="fadein">
+    <input type="button" value="淡出" id="fadeout">
+    <input type="button" value="切換淡入淡出" id="fadetoggle">
+    <input type="button" value="半透明" id="fadeto">
+    <input type="button" value="滑入" id="slidedown">
+    <input type="button" value="滑出" id="slideup">
+    <input type="button" value="切換滑入滑出" id="slidetoggle">
+    <input type="button" value="停止" id="stop">
+    <input type="button" value="重置" id="reset">
+
+    <script>
+        $('#big').click(function () {
+            // .animate({CSS}, slow/fast/ms, linear/swing, 完成時的 function) 除了 CSS 外都是可加可不加
+            // CSS 可以用 += 和 -= 做相對的動畫(原生jQ只支援數字的 CSS, 其他效果可以用官方jQ ui)
+            // linear/swing ，預設是 swing
+            // 原生 jQ 支援:https://www.w3school.com.cn/jquery/effect_animate.asp
+            // jQ UI(官方擴充):https://jqueryui.com/
+            $('#principal').animate({
+                // 寬高在兩秒內變大100px
+                width: '+=100px',
+                height: '+=100px'
+            }, 2000, function () {
+                console.log('變大了')
+            })
+        })
+
+        $('#move').click(function () {
+            // .animate() 可以寫好幾個串在一起
+            // 圖片往右往下100px
+            $('#principal').animate({ left: '+=100px' }, 2000).animate({ top: '+=100px' }, 2000)
+        })
+
+        $('#fadein').click(function () {
+            // .fadeIn(slow/normal/fast/ms, linear/swing, 完成時的 function)
+            $('#principal').fadeIn('slow')
+        })
+
+        $('#fadeout').click(function () {
+            // .fadeOut(slow/normal/fast/ms, linear/swing, 完成時的 function)
+            // .fadeOut() 結束會 display none (區塊會消失 其他區塊會補上位置 會破壞排版)
+            // 解決方法是 fadeOut() 結束前先 .stop() 讓他先停止再繼續後續動作
+            $('#principal').fadeOut('slow')
+        })
+
+        $('#fadetoggle').click(function () {
+            // .fadeToggle(slow/normal/fast/ms, linear/swing, 完成時的 function)
+            // 正常時淡出 消失時淡入
+            $('#principal').fadeToggle('slow')
+        })
+
+        $('#fadeto').click(function () {
+            // .fadeTo(slow/normal/fast/ms, 透明度, linear/swing, 完成時的 function)
+            $('#principal').fadeTo('slow', 0.5)
+        })
+
+        $('#slidedown').click(function () {
+            // .slideDown(slow/normal/fast/ms, linear/swing, 完成時的 function)
+            // slideDown 結束會 display none
+            // 解決方法是 slideDown() 結束前先 .stop() 讓他先停止再繼續後續動作
+            // 不停修改東西的 height, 沒限制寬度的話 寬高會隨等比縮放
+            // 若有限制寬度就只會改 height (上下滑動) 類似摺疊的效果
+            $('#principal').slideDown('slow')
+        })
+
+        $('#slideup').click(function () {
+            // .slideUp(slow/normal/fast/ms, linear/swing, 完成時的 function)
+            $('#principal').slideUp('slow')
+        })
+
+        $('#slidetoggle').click(function () {
+            // .slideToggle(slow/normal/fast/ms, linear/swing, 完成時的 function)
+            $('#principal').slideToggle('slow')
+        })
+
+        $('#stop').click(function () {
+            // .stop(是否停止之後的動畫(true(全部 .animate 停止) false(停止第一個 後面的 .animate 繼續)), 是否跳到動畫結束(true(直接跳到動畫結束狀態停止) false(在點停止當下的狀態停止)))
+            // 如果跳到動畫結束的話，停止之後的動畫必須是 true
+            $('#principal').stop(true, true)
+        })
+
+        $('#reset').click(function () {
+            // 動作中重置沒作用 要加上.stop() 讓他先停止才能重置
+            // 會清除 style 所以盡量不要用 行內樣式
+            $('#principal').stop().removeAttr('style')
+        })
+
+    </script>
+
+</body>
+
+</html>

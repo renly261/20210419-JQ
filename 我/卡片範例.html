@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #imgs {
+            height: 100px;
+
+            /* 預設往下推的部分隱藏 */
+            overflow: hidden;
+        }
+
+        #imgs img {
+            height: 100px;
+
+            /* 預設先往下推 50px */
+            margin-top: 50px;
+            display: block;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="imgs">
+        <img src="./0551.jpg" alt="">
+        <img src="./0552.jpg" alt="">
+        <img src="./0553.jpg" alt="">
+        <img src="./0554.jpg" alt="">
+        <img src="./0555.jpg" alt="">
+    </div>
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script>
+        // .hover(mouseIn, mouseOut)
+        $('#imgs img').hover(function () {
+            // 滑鼠移過去時 該圖片 往上推 50px
+            $(this).stop().animate({ marginTop: 0 })
+            // 滑鼠移過去時 該圖片的上一張 往上推 25px
+            $(this).prev().stop().animate({ marginTop: 25 })
+            // 滑鼠移過去時 該圖片的下一張 往上推 25px
+            $(this).next().stop().animate({ marginTop: 25 })
+        }, function () {
+            // 滑鼠離開時 圖片回到預設往下推 50px
+            $(this).stop().animate({ marginTop: 50 })
+            $(this).prev().stop().animate({ marginTop: 50 })
+            $(this).next().stop().animate({ marginTop: 50 })
+        })
+    </script>
+</body>
+
+</html>

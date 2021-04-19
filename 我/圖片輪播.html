@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #carousel {
+            width: 400px;
+            height: 300px;
+            /* 超出的部分隱藏 只顯示可見區域 */
+            overflow: hidden;
+            position: relative;
+        }
+
+        #imgs {
+            position: absolute;
+        }
+
+        #imgs>img {
+            float: left;
+        }
+    </style>
+</head>
+
+
+<body>
+    <script src="./jquery-3.6.0.min.js"></script>
+    <!-- 原理是設定一個很寬的 div 設定一個可見區域 讓他可見區域左右滑動 形成輪播效果 -->
+    <div id="carousel">
+        <div id="imgs">
+            <img src="./0551.jpg" alt="">
+            <img src="./0552.jpg" alt="">
+            <img src="./0553.jpg" alt="">
+            <img src="./0554.jpg" alt="">
+            <img src="./0555.jpg" alt="">
+        </div>
+    </div>
+    <!-- 直接用 < > 會被誤認為錯誤 所以要用 &lt(<) &gt(>) -->
+    <input type="button" value="&lt" id="left">
+    <input type="button" value="&gt" id="right">
+    <script>
+        // 紀錄目前第幾張
+        let now = 0
+
+        // 調整長度
+        const total = $('#imgs img').length
+        $('#imgs').css('width', total * 400)
+
+        $('#right').click(function () {
+            // 防止圖片超出
+            if (now < total - 1) {
+                now++
+                // 設定移動多少 第0張就0 第一張就 1*400 第二張 2*400 以此類推
+                const move = now * 400
+                // $('#imgs').stop(true, true).animate({ left: `-${move}px` })
+
+                // 可以先讓他超出再回來 造成彈跳效果
+                $('#imgs').stop().animate({ left: `-${move + 25}px` }).animate({ left: `-${move}px` })
+            }
+        })
+
+        $('#left').click(function () {
+            if (now > 0) {
+                now--
+                const move = now * 400
+                if (move === 0) {
+                    // 設定回到第0張的時候 +25 造成彈跳效果
+                    $('#imgs').stop().animate({ left: `${move + 25}px` }).animate({ left: `-${move}px` })
+                } else {
+                    $('#imgs').stop().animate({ left: `-${move - 25}px` }).animate({ left: `-${move}px` })
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>

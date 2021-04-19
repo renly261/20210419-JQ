@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 遊戲區域 */
+        #game {
+            width: 400px;
+            height: 400px;
+            background: black;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 殭屍 */
+        #game img {
+            height: 150px;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="../我/jquery-3.6.0.min.js"></script>
+
+    <!-- sweetalert:https://sweetalert2.github.io/#examples -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <div id="game">
+    </div>
+    <input type="button" value="開始" id="btn-start">
+    <br>
+    <p>分數: <span id="text-score">0</span>分</p>
+    <p>剩餘: <span id="text-time">0</span>秒</p>
+
+    <script>
+
+        // 分數
+        let score = 0
+
+        // 遊戲時間
+        let countdown = 5
+
+        // 倒數計時
+        // 倒數計時 因為 clearInterval 會把變數也一起清掉 所以設定 timer=0
+        let timer = 0
+
+        // 遞迴 讓他一直跑(一直呼叫自己)
+        const move = (zb) => {
+            zb.stop().animate({
+                left: Math.round(Math.random() * 70) + '%',
+                top: Math.round(Math.random() * 70) + '%'
+            }, 2000, function () {
+                move(zb)
+            })
+        }
+        // 點擊開始按鈕要做的事
+        $('#btn-start').click(function () {
+            // 開始按鈕 關閉
+            $(this).attr('disabled', true)
+
+            // 重設參數
+            score = 0
+            $('#text-score').text(score)
+            countdown = 5
+            $('#text-time').text(countdown)
+
+            timer = setInterval(() => {
+                // 倒數
+                countdown--
+                $('#text-time').text(countdown)
+
+                // 0~10 隨機產生
+                let rand = Math.round(Math.random() * 10)
+
+                // 隨機數字 >5 且 殭屍數目 < 10 時產生殭屍
+                if (rand > 5 && $('#game img').length < 10) {
+
+                    // style 後面是隨機出現位置 *70%是防止殭屍超出遊戲範圍
+                    const zb = $(`<img src="./1.gif" alt="" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
+
+                    // 在遊戲區域下一層插入殭屍 
+                    $('#game').append(zb)
+
+                    // 讓殭屍跑遞迴
+                    move(zb)
+                }
+                // .each() 裡面的每個東西 但這樣做每個殭屍會一起動
+                //     $('#game img').each(function () {
+                //         $(this).stop().animate({
+                // 殭屍隨機移動
+                //             left: Math.round(Math.random() * 70) + '%',
+                //             top: Math.round(Math.random() * 70) + '%'
+                //         }, 1000)
+                //     })
+
+                // 時間到
+                if (countdown <= 0) {
+                    clearInterval(timer)
+
+                    // 使用 sweetalert 套件
+                    Swal.fire({
+                        icon: 'success',
+                        title: '時間到',
+                        text: `你得到 ${score} 分`
+                    })
+
+                    // 時間到 清空遊戲區域
+                    $('#game img').remove()
+
+                    // 開始按鈕 開放
+                    $(this).attr('disabled', false)
+                }
+            }, 1000);
+        })
+
+
+        // 點擊到殭屍時要做的事
+        $('#game').on('click', 'img', function () {
+
+            // 點擊到殭屍時換圖片
+            $(this).attr('src', './blood.png')
+            $(this).stop()
+            // 忽略點擊事件 只能點到殭屍 點到血沒反應 但點兩下會選取
+            // $(this).css('pointer-events', 'none')
+
+            // 忽略點擊事件、無法點擊和選取
+            $(this).css({
+                // 無法選取(反白)
+                'user-select': 'none',
+
+                // 無法拖曳
+                '-webkit-user-drag': 'none',
+
+                // 忽略點擊事件(例如有上下兩層 沒有設定 pointer-events': 'none'的話就無法點到下面的東西)
+                'pointer-events': 'none'
+            })
+            score++
+            $('#text-score').text(score)
+        })
+    </script>
+
+</body>
+
+</html>
