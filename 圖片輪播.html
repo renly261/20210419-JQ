@@ -33,5 +33,33 @@
   <input type="button" value="&lt;" id="left">
   <input type="button" value="&gt;" id="right">
   <script src="./jquery-3.6.0.min.js"></script>
+  <script>
+    // 紀錄目前第幾張
+    let now = 0
+
+    // 調整長度
+    const total = $('#imgs img').length
+    $('#imgs').css('width', total*400)
+
+    $('#right').click(function() {
+      if (now < total - 1) {
+        now++
+        const move = now*400
+        $('#imgs').stop().animate({left: `-${move+25}px`}).animate({left: `-${move}px`})
+      }
+    })
+
+    $('#left').click(function() {
+      if (now > 0) {
+        now--
+        const move = now*400
+        if (move === 0) {
+          $('#imgs').stop().animate({left: `${move+25}px`}).animate({left: `-${move}px`})
+        } else {
+          $('#imgs').stop().animate({left: `-${move-25}px`}).animate({left: `-${move}px`})
+        }
+      }
+    })
+  </script>
 </body>
 </html>
