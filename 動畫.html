@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <img src="./0104.jpg" alt="" id="principal">
+  <br>
+  <input type="button" value="變大" id="big">
+  <script src="./jquery-3.6.0.min.js"></script>
+  <script>
+    $('#big').click(function(){
+      // .animate(CSS, slow/normal/fast/ms, linear/swing, 完成時的 function)
+      // CSS 可以用 += 和 -= 作相對的動畫
+      // 除了 CSS 外都是可加可不加
+      // linear/swing 預設是 swing
+      $('#principal').animate({
+        width: '+=100px',
+        height: '+=100px'
+      }, 2000, function(){
+        console.log('變大了')
+      })
+    })
+  </script>
+</body>
+</html>
