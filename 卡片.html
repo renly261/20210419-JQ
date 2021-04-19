@@ -28,6 +28,16 @@
   </div>
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
+    // .hover(mouseIn, mouseOut)
+    $('#imgs img').hover(function() {
+      $(this).stop().animate({marginTop: 0})
+      $(this).prev().stop().animate({marginTop: 25})
+      $(this).next().stop().animate({marginTop: 25})
+    },function() {
+      $(this).stop().animate({marginTop: 50})
+      $(this).prev().stop().animate({marginTop: 50})
+      $(this).next().stop().animate({marginTop: 50})
+    })
   </script>
 </body>
 </html>
