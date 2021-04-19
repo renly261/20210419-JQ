@@ -5,11 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    #principal {
+      position: relative;
+    }
+  </style>
 </head>
 <body>
   <img src="./0104.jpg" alt="" id="principal">
   <br>
   <input type="button" value="變大" id="big">
+  <input type="button" value="移動" id="move">
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
     $('#big').click(function(){
@@ -23,6 +29,11 @@
       }, 2000, function(){
         console.log('變大了')
       })
+    })
+
+    $('#move').click(function(){
+      // .animate() 可以串在一起
+      $('#principal').animate({left: '+=100px'}).animate({top: '+=100px'})
     })
   </script>
 </body>
