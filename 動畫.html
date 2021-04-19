@@ -26,6 +26,7 @@
   <input type="button" value="滑出" id="slideup">
   <input type="button" value="切換滑入滑出" id="slidetoggle">
   <input type="button" value="停止" id="stop">
+  <input type="button" value="重置" id="reset">
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
     $('#big').click(function () {
@@ -89,6 +90,10 @@
     $('#slidetoggle').click(function () {
       // .slideToggle(slow/normal/fast/ms, linear/swing, 完成時的 function)
       $('#principal').slideToggle('slow')
+    })
+
+    $('#reset').click(function() {
+      $('#principal').stop().removeAttr('style')
     })
   </script>
 </body>
