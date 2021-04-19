@@ -22,6 +22,9 @@
   <input type="button" value="淡出" id="fadeout">
   <input type="button" value="半透明" id="fadeto">
   <input type="button" value="切換淡入淡出" id="fadetoggle">
+  <input type="button" value="滑入" id="slidedown">
+  <input type="button" value="滑出" id="slideup">
+  <input type="button" value="切換滑入滑出" id="slidetoggle">
   <input type="button" value="停止" id="stop">
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
@@ -69,6 +72,23 @@
     $('#fadeto').click(function () {
       // .fadeTo(slow/normal/fast/ms, 透明度, linear/swing, 完成時的 function)
       $('#principal').fadeTo('slow', 0.5)
+    })
+  
+    $('#slidedown').click(function () {
+      // .slideDown(slow/normal/fast/ms, linear/swing, 完成時的 function)
+      // slideDown 結束會 display none
+      // 不停修改東西的 height
+      $('#principal').slideDown('slow')
+    })
+
+    $('#slideup').click(function () {
+      // .slideUp(slow/normal/fast/ms, linear/swing, 完成時的 function)
+      $('#principal').slideUp('slow')
+    })
+
+    $('#slidetoggle').click(function () {
+      // .slideToggle(slow/normal/fast/ms, linear/swing, 完成時的 function)
+      $('#principal').slideToggle('slow')
     })
   </script>
 </body>
