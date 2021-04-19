@@ -28,6 +28,7 @@
   <p>分數: <span id="text-score">0</span></p>
   <p>剩餘: <span id="text-time">0</span> 秒</p>
   <script src="../jquery-3.6.0.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script>
     // 分數
     let score = 0
@@ -51,7 +52,7 @@
       // 重設
       score = 0
       $('#text-score').text(score)
-      countdown = 30
+      countdown = 3
       $('#text-time').text(countdown)
 
       timer = setInterval(() => {
@@ -69,7 +70,11 @@
         // 時間到
         if (countdown <= 0) {
           clearInterval(timer)
-          alert('時間到')
+          Swal.fire({
+            icon: 'info',
+            title: '時間到',
+            text: `你得到 ${score} 分`
+          })
           $('#game img').remove()
           $(this).attr('disabled', false)
         }
