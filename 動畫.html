@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,14 +12,16 @@
     }
   </style>
 </head>
+
 <body>
   <img src="./0104.jpg" alt="" id="principal">
   <br>
   <input type="button" value="變大" id="big">
   <input type="button" value="移動" id="move">
+  <input type="button" value="停止" id="stop">
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
-    $('#big').click(function(){
+    $('#big').click(function () {
       // .animate(CSS, slow/normal/fast/ms, linear/swing, 完成時的 function)
       // CSS 可以用 += 和 -= 作相對的動畫
       // 除了 CSS 外都是可加可不加
@@ -26,15 +29,22 @@
       $('#principal').animate({
         width: '+=100px',
         height: '+=100px'
-      }, 2000, function(){
+      }, 2000, function () {
         console.log('變大了')
       })
     })
 
-    $('#move').click(function(){
+    $('#move').click(function () {
       // .animate() 可以串在一起
-      $('#principal').animate({left: '+=100px'}).animate({top: '+=100px'})
+      $('#principal').animate({ left: '+=100px' }, 2000).animate({ top: '+=100px' }, 2000)
+    })
+
+    $('#stop').click(function () {
+      // .stop(是否停止之後的動畫, 是否跳到動畫結束)
+      // 如果跳到動畫結束的話，停止之後的動畫必須是 true
+      $('#principal').stop(true, true)
     })
   </script>
 </body>
+
 </html>
