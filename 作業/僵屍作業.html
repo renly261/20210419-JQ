@@ -6,16 +6,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+
     <style>
         #game {
             width: 100%;
             height: 100vh;
-            background: lightblue;
+            background: url(./space-invaders.jpg);
+            background-size: 75%;
+            background-position: center center;
             position: relative;
+            cursor: url(./cursor_white.png)50 50, auto;
+            font-family: "Press Start 2P";
+            font-size: 12px;
         }
 
         p {
-            color: white;
+            color: lightskyblue;
+            position: relative;
+            left: 5px;
+            top: 55%;
         }
 
         #btn-start {
@@ -25,11 +35,14 @@
             overflow: hidden;
             background-size: cover;
             cursor: pointer;
+            position: relative;
+            left: 5px;
+            top: 5px;
         }
 
         #game img {
-            height: 150px;
-            width: 200px;
+            height: 100px;
+            width: 100px;
             position: absolute;
             padding-left: 100px;
         }
@@ -42,12 +55,14 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <div id="game">
         <input type="button" value="" id="btn-start">
-        <p>剩餘: <span id="text-time">-</span>秒</p>
-        <p>當前玩家:</p>
-        <p>分數: <span id="text-score">-</span>分</p>
-        <p>最高紀錄:</p>
-        <p>玩家: <span id="highscore-player">-</span></p>
-        <p>分數: <span id="highscore-score">-</span>分</p>
+        <br>
+        <br>
+        <p>Time:<span id="text-time">-</span> Sec</p>
+        <p>Score: <span id="text-score">-</span> Points</p>
+        <br>
+        <p>World Records:</p>
+        <p>Player: <span id="highscore-player">-</span></p>
+        <p>Score: <span id="highscore-score">-</span> Points</p>
 
     </div>
 
@@ -57,11 +72,11 @@
         let score = 0
 
         // 遊戲時間
-        let countdown = 10
+        let countdown = 30
 
         // 倒數計時
         // 倒數計時 因為 clearInterval 會把變數也一起清掉 所以設定 timer=0
-        let timer = 10
+        let timer = 30
 
         let highscore = { name: '', score: 0 }
 
@@ -76,21 +91,22 @@
         const move = (mv) => {
             mv.stop().animate({
                 left: Math.round(Math.random() * 70) + '%',
-                top: Math.round(Math.random() * 50) + '%'
-            }, 3000, function () {
+                top: Math.round(Math.random() * 70) + '%'
+            }, 4000, function () {
                 move(mv)
             })
         }
 
         // 點擊開始按鈕要做的事
-        $('#btn-start').click(function () {
+        $('#btn-start').click(function (event) {
+
             // 開始按鈕 關閉
             $(this).attr('disabled', true)
 
             // 重設參數
             score = 0
             $('#text-score').text(score)
-            countdown = 10
+            countdown = 30
             $('#text-time').text(countdown)
 
             timer = setInterval(() => {
@@ -101,11 +117,11 @@
                 // 0~10 隨機產生
                 let rand = Math.round(Math.random() * 10)
 
-                // 隨機數字 >3 且 殭屍數目 < 30 時產生 敵人
-                if (rand > 3 && $('#game img').length < 30) {
+                // 隨機數字 >4 且 殭屍數目 < 20 時產生 敵人
+                if (rand > 4 && $('#game img').length < 20) {
 
                     // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                    const mv = $(`<img src="./com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
+                    const mv = $(`<img src="./com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
 
                     // 在遊戲區域下一層插入圖片 
                     $('#game').append(mv)
@@ -114,8 +130,8 @@
                     move(mv)
                 }
 
-                // 隨機數字 >4 且 圖片數目 < 30 時產生 友軍
-                if (rand > 4 && $('#game img').length < 30) {
+                // 隨機數字 >5 且 圖片數目 < 20 時產生 友軍
+                if (rand > 5 && $('#game img').length < 20) {
 
                     // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                     const mv = $(`<img src="./ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
@@ -127,8 +143,8 @@
                     move(mv)
                 }
 
-                // 隨機數字 >5 且 圖片數目 < 30 時產生 補包
-                if (rand > 5 && $('#game img').length < 30) {
+                // 隨機數字 >8 且 圖片數目 < 20 時產生 補包
+                if (rand > 8 && $('#game img').length < 20) {
 
                     // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                     const mv = $(`<img src="./heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
@@ -163,7 +179,7 @@
                         highscore.score = score
                         highscore.name = prompt('最高分! 請輸入名字')
                         if (highscore.name === null || highscore.name.length === 0) {
-                            highscore.name = '路人'
+                            highscore.name = 'None'
                         }
                         // 改掉分數和使用者名稱(網頁上的元素)
                         $('#highscore-player').text(`${highscore.name}`)
@@ -175,6 +191,7 @@
 
                 }
             }, 1000);
+            console.log(event);
         })
 
 
@@ -184,7 +201,13 @@
             // 點擊到敵人時換圖片
             $(this).attr('src', './replace1.png')
             $(this).stop()
-            $(this).fadeOut('slow')
+            $(this).animate({
+                width: '-=120px',
+                height: '-=120px',
+                opacity: '-=0.5'
+            }, 1000)
+
+
 
             // 忽略點擊事件、無法點擊和選取
             $(this).css({
@@ -209,7 +232,11 @@
             // 點擊到友軍時換圖片
             $(this).attr('src', './replace2.png')
             $(this).stop()
-            $(this).fadeOut('slow')
+            $(this).animate({
+                width: '-=120px',
+                height: '-=120px',
+                opacity: '-=0.5'
+            }, 1000)
 
             // 忽略點擊事件、無法點擊和選取
             $(this).css({
@@ -234,7 +261,11 @@
             // 點擊到補包時換圖片
             $(this).attr('src', './replace3.png')
             $(this).stop()
-            $(this).fadeOut('slow')
+            $(this).animate({
+                width: '-=120px',
+                height: '-=120px',
+                opacity: '-=0.5'
+            }, 1000)
             // 忽略點擊事件、無法點擊和選取
             $(this).css({
                 // 無法選取(反白)
