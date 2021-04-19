@@ -21,6 +21,7 @@
   <input type="button" value="淡入" id="fadein">
   <input type="button" value="淡出" id="fadeout">
   <input type="button" value="半透明" id="fadeto">
+  <input type="button" value="切換淡入淡出" id="fadetoggle">
   <input type="button" value="停止" id="stop">
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
@@ -57,6 +58,12 @@
       // .fadeOut(slow/normal/fast/ms, linear/swing, 完成時的 function)
       // fadeout 結束會 display none
       $('#principal').fadeOut('slow')
+    })
+
+    $('#fadetoggle').click(function () {
+      // .fadeToggle(slow/normal/fast/ms, linear/swing, 完成時的 function)
+      // 正常時淡出 消失時淡入
+      $('#principal').fadeToggle('slow')
     })
 
     $('#fadeto').click(function () {
