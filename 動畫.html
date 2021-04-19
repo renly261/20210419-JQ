@@ -18,6 +18,9 @@
   <br>
   <input type="button" value="變大" id="big">
   <input type="button" value="移動" id="move">
+  <input type="button" value="淡入" id="fadein">
+  <input type="button" value="淡出" id="fadeout">
+  <input type="button" value="半透明" id="fadeto">
   <input type="button" value="停止" id="stop">
   <script src="./jquery-3.6.0.min.js"></script>
   <script>
@@ -43,6 +46,22 @@
       // .stop(是否停止之後的動畫, 是否跳到動畫結束)
       // 如果跳到動畫結束的話，停止之後的動畫必須是 true
       $('#principal').stop(true, true)
+    })
+
+    $('#fadein').click(function () {
+      // .fadeIn(slow/normal/fast/ms, linear/swing, 完成時的 function)
+      $('#principal').fadeIn('slow')
+    })
+
+    $('#fadeout').click(function () {
+      // .fadeOut(slow/normal/fast/ms, linear/swing, 完成時的 function)
+      // fadeout 結束會 display none
+      $('#principal').fadeOut('slow')
+    })
+
+    $('#fadeto').click(function () {
+      // .fadeTo(slow/normal/fast/ms, 透明度, linear/swing, 完成時的 function)
+      $('#principal').fadeTo('slow', 0.5)
     })
   </script>
 </body>
