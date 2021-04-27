@@ -37,6 +37,27 @@
             -webkit-user-drag: none;
         }
 
+        #me {
+            position: absolute;
+            top: 85%;
+            left: 40%;
+        }
+
+        #game #me img {
+            width: 80px;
+            height: 60px;
+        }
+
+        #fire {
+            width: 10px;
+            height: 50px;
+            background: white;
+            position: absolute;
+            left: 50%;
+            top: 550px;
+        }
+
+
         p {
             color: lightskyblue;
             position: relative;
@@ -78,6 +99,8 @@
     <script src="./jquery-3.6.0.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <div id="game">
+        <div id="me"><img src="./player.png" alt=""></div>
+        <div id="fire"></div>
         <input type="button" value="" id="btn-start">
         <br>
         <br>
@@ -102,6 +125,7 @@
         // 倒數計時 因為 clearInterval 會把變數也一起清掉 所以設定 timer=0
         let timer = 0
 
+
         let highscore = { name: '', score: 0 }
 
         const highStorage = JSON.parse(localStorage.getItem('space'))
@@ -121,16 +145,8 @@
             })
         }
 
-        // 滑鼠位置 
-        $('#game').mousemove(function (event) {
-            // console.log(event);
-            const mouseX = event.pageX
-            const mouseY = event.pageY
-            console.log(mouseX);
-            console.log(mouseY);
-        })
-
-        // 點擊開始按鈕要做的事
+        $('#fire').hide()
+        // 點擊開始按鈕要做的事----------------------------------------------------------------------------------
         $('#btn-start').click(function (event) {
 
             // 開始按鈕 關閉
@@ -142,6 +158,32 @@
             countdown = 30
             $('#text-time').text(countdown)
 
+
+            // 移動滑鼠時改變玩家位置
+            $('#game').mousemove(function (event) {
+
+                let mouseX = event.pageX
+                // 讓玩家位置不要超出邊界
+                if (mouseX > window.innerWidth - 80) {
+                    mouseX = window.innerWidth - 40
+                }
+                else if (mouseX <= 80) {
+                    mouseX = 40
+                }
+                $('#me').css('left', `${mouseX - 140}px`)
+            })
+
+            // 點擊開火
+            $('#game').click(function (event) {
+                let mouseX = event.pageX
+                if ($('#btn-start').attr('disabled') == 'disabled') {
+                    $('#fire').css('left', `${mouseX}px`)
+                    $('#fire').show().animate({ top: '-=500px' }).fadeOut('fast', function () {
+                        $(this).css('top', '+=500px')
+                    })
+                }
+            })
+
             timer = setInterval(() => {
                 // 倒數
                 countdown--
@@ -151,7 +193,7 @@
                 let rand = Math.round(Math.random() * 10)
 
                 // 隨機數字 >4 且 殭屍數目 < 20 時產生 敵人
-                if (rand > 4 && $('#game img').length < 50) {
+                if (rand > 4 && $('#game img').length < 40) {
 
                     // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                     const mv = $(`<img src="./com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
@@ -164,7 +206,7 @@
                 }
 
                 // 隨機數字 >5 且 圖片數目 < 20 時產生 友軍
-                if (rand > 5 && $('#game img').length < 50) {
+                if (rand > 5 && $('#game img').length < 40) {
 
                     // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                     const mv = $(`<img src="./ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
@@ -177,7 +219,7 @@
                 }
 
                 // 隨機數字 >8 且 圖片數目 < 20 時產生 補包
-                if (rand > 8 && $('#game img').length < 50) {
+                if (rand > 8 && $('#game img').length < 40) {
 
                     // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                     const mv = $(`<img src="./heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
@@ -228,9 +270,8 @@
         })
 
 
-        // 點擊到敵人時要做的事
-        $('#game').on('click', '#com', function () {
-
+        // 點擊到敵人時要做的事-----------------------------------------------------------------------------------------
+        $('#game').on('click', '#com', function (event) {
             // 點擊到敵人時換圖片
             $(this).attr('src', './replace1.png')
             $(this).stop()
@@ -259,7 +300,7 @@
             $('#text-score').text(score)
         })
 
-        // 點擊到友軍時要做的事
+        // 點擊到友軍時要做的事-----------------------------------------------------------------------------------------
         $('#game').on('click', '#ally', function () {
 
             // 點擊到友軍時換圖片
@@ -288,7 +329,7 @@
             $('#text-score').text(score)
         })
 
-        // 點擊到補包時要做的事
+        // 點擊到補包時要做的事-----------------------------------------------------------------------------------------
         $('#game').on('click', '#heal', function () {
 
             // 點擊到補包時換圖片
