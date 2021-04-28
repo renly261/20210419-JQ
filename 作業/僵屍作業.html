@@ -23,27 +23,44 @@
             vertical-align: baseline;
         }
 
+        /* 規則 */
+        #rules {
+            position: absolute;
+            color: rgb(209, 95, 209);
+            left: 35%;
+            top: 40%;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 10px;
+        }
+
+        /* 遊戲區 */
         #game {
             width: 100%;
             height: 100%;
-            background: url(./space-invaders.jpg);
+            background: url(./images/background.jpg);
             background-size: contain;
-            background-position: center center;
+            background-position: center;
             position: relative;
-            cursor: url(./cursor_white.png)50 50, auto;
+            cursor: url(./images/cursor_white.png) 50 50, auto;
             font-family: "Press Start 2P";
             font-size: 14px;
             user-select: none;
             -webkit-user-drag: none;
         }
 
-        #me {
+        /* 玩家區 */
+        .box-player {
+            width: 100%;
+        }
+
+        #player {
             position: absolute;
             top: 85%;
             left: 40%;
         }
 
-        #game #me img {
+        #game #player img {
             width: 80px;
             height: 60px;
         }
@@ -53,25 +70,38 @@
             height: 50px;
             background: white;
             position: absolute;
-            left: 50%;
-            top: 550px;
+            left: 51%;
+            top: 65%;
         }
 
-        #count {
+        /* 資訊區 */
+        .box-info {
             position: absolute;
-            left: 47.5%;
-            color: white;
-            font-size: 40px;
+            top: 65%;
+            height: 10%;
         }
 
         p {
             color: lightskyblue;
-            position: relative;
-            top: 55%;
         }
 
+        /* 開始遊戲前倒數 */
+        #count {
+            position: absolute;
+            left: 47%;
+            color: red;
+            font-size: 100px;
+            top: 40%;
+        }
+
+        #count-time {
+            opacity: 0;
+            font-size: 100px;
+        }
+
+        /* 開始按鈕 */
         #btn-start {
-            background-image: url(./SpaceInvadersLogo.png);
+            background-image: url(./images/button.png);
             width: 150px;
             height: 120px;
             overflow: hidden;
@@ -80,6 +110,7 @@
             background-repeat: no-repeat;
             cursor: pointer;
             position: relative;
+            border-radius: 50%;
         }
 
         #btn-start:hover {
@@ -91,9 +122,10 @@
             box-shadow: 0 3px #666;
         }
 
+        /* 敵人 友軍 補包 */
         #game img {
-            height: 100px;
-            width: 100px;
+            height: 90px;
+            width: 90px;
             position: absolute;
             padding-left: 100px;
         }
@@ -104,20 +136,27 @@
 
     <script src="./jquery-3.6.0.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <div id="game">
-        <div id="me"><img src="./player.png" alt=""></div>
-        <div id="fire"></div>
+        <p id="rules">遊戲規則說明:<br>歡迎來到本遊戲<br>本遊戲分成四個區塊<br>1.按鈕區:<br>點選左上角按鈕即可開始遊戲<br>2.資訊區:<br>上方顯示目前剩餘時間和分數<br>
+            下方則是最高分數紀錄<br>3.遊戲區:<br>打中敵人或補包加一分<br>打中友方則扣一分<br>4.玩家區:<br>控制滑鼠準心擊敗敵人<br>
+        </p>
+        <div class="box-player">
+            <div id="player"><img src="./images/player.png" alt=""></div>
+            <div id="fire"></div>
+        </div>
         <input type="button" value="" id="btn-start">
         <br>
         <br>
-        <p>Time:<span id="text-time">-</span> Sec</p>
+        <div class="box-info">
+            <p>Time: <span id="text-time">-</span> Sec</p>
+            <p>Score: <span id="text-score">-</span> Points</p>
+            <br>
+            <p>World Records:</p>
+            <p>Player: <span id="highscore-player">-</span></p>
+            <p>Score: <span id="highscore-score">-</span> Points</p>
+        </div>
         <p id="count"><span id="count-time"></span></p>
-        <p>Score: <span id="text-score">-</span> Points</p>
-        <br>
-        <p>World Records:</p>
-        <p>Player: <span id="highscore-player">-</span></p>
-        <p>Score: <span id="highscore-score">-</span> Points</p>
-
     </div>
 
     <script>
@@ -128,15 +167,12 @@
         // 遊戲時間
         let countdown = 30
 
+        // 遊戲前的倒數時間
         let countdown1 = 3
 
         // 倒數計時
         // 倒數計時 因為 clearInterval 會把變數也一起清掉 所以設定 timer=0
         let timer = 0
-
-
-
-        let fire = 0
 
         let highscore = { name: '', score: 0 }
 
@@ -157,56 +193,46 @@
             })
         }
 
-
+        // 點選開始按鈕前隱藏介面 只顯示規則
         $('#fire').hide()
+        $('.box-info').hide()
+        $('.box-player').hide()
+        $('#rule').show()
 
-
-        $('#count-time').hide()
+        // 先顯示倒數 避免倒數器的延遲時間顯示
+        $('#count-time').text(countdown1)
 
         // 點擊開始按鈕要做的事-------------------------------------------------------------------------------------------
         $('#btn-start').click(function (event) {
-
             // 開始按鈕 關閉
             $(this).attr('disabled', true)
 
+            // 遊戲介面淡出
+            $('.box-info').fadeIn('slow')
+            $('.box-player').fadeIn('slow')
+            $('#rules').fadeOut('slow')
+
+            // 遊戲開始前的倒數淡出
+            $('#count-time').animate({
+                opacity: '1'
+            }, 1000)
+
             // 開始遊戲前先倒數3秒
             timer = setInterval(() => {
-                $('#count-time').fadeIn('slow')
+                // 隨著倒數 改倒數秒數和倒數秒數的字體大小
                 countdown1--
                 $('#count-time').text(countdown1)
                 $('#count-time').animate({
-                    fontSize: '60px'
-                }, 3000)
+                    fontSize: '+=40px'
+                }, 4000)
 
-                // 移動滑鼠時改變玩家位置
-                $('#game').mousemove(function (event) {
-
-                    let mouseX = event.pageX
-                    // 讓玩家位置不要超出邊界
-                    if (mouseX > window.innerWidth - 80) {
-                        mouseX = window.innerWidth - 40
-                    }
-                    else if (mouseX <= 80) {
-                        mouseX = 40
-                    }
-                    $('#me').css('left', `${mouseX - 140}px`)
-                })
-
-                // 點擊開火
-                $('#game').click(function (event) {
-                    let mouseX = event.pageX
-                    if ($('#btn-start').attr('disabled') == 'disabled') {
-                        $('#fire').css('left', `${mouseX}px`)
-                        $('#fire').show().animate({ top: '-=500px' }).fadeOut('fast', function () {
-                            $(this).css('top', '+=500px')
-                        })
-                    }
-                })
+                // 正式進入遊戲要做的事----------------------------------------------------------------------------
                 if (countdown1 <= 0) {
+                    // 遊戲前的倒數結束 淡出 Start 調整位置 並結束倒數
+                    $('#count-time').text('Start')
+                    $('#count').css('left', '28%')
                     $('#count').fadeOut('slow')
                     clearInterval(timer)
-
-
 
                     // 重設參數
                     score = 0
@@ -214,19 +240,48 @@
                     countdown = 30
                     $('#text-time').text(countdown)
 
+                    // 移動滑鼠時改變玩家位置
+                    $('#game').mousemove(function (event) {
+                        // 設定一個變數抓滑鼠的位置
+                        let mouseX = event.pageX
+
+                        // 讓滑鼠位置不要超出螢幕邊界
+                        if (mouseX > window.innerWidth - 80) {
+                            mouseX = window.innerWidth - 40
+                        }
+                        else if (mouseX <= 80) {
+                            mouseX = 40
+                        }
+                        $('#player').css('left', `${mouseX - 140}px`)
+                    })
+
+                    // 點擊開火
+                    $('#game').click(function (event) {
+                        // 設定一個變數抓滑鼠的位置
+                        let mouseX = event.pageX
+
+                        // 按照滑鼠位置改變子彈射出的位置
+                        $('#fire').css('left', `${mouseX}px`)
+
+                        // 子彈往上位移並淡出後回到初始位置
+                        $('#fire').show().animate({ top: '-=65%' }).fadeOut('fast', function () {
+                            $(this).css('top', '+=65%')
+                        })
+                    })
+                    // 隨著遊戲時間倒數要做的事----------------------------------------------------------------------------
                     timer = setInterval(() => {
-                        // 倒數
+                        // 倒數 修改顯示倒數時間
                         countdown--
                         $('#text-time').text(countdown)
 
                         // 0~10 隨機產生
                         let rand = Math.round(Math.random() * 10)
 
-                        // 隨機數字 >4 且 殭屍數目 < 20 時產生 敵人
+                        // 隨機數字 >4 且 殭屍數目 < 30 時產生 敵人
                         if (rand > 4 && $('#game img').length < 40) {
 
                             // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                            const mv = $(`<img src="./com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
+                            const mv = $(`<img src="./images/com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
 
                             // 在遊戲區域下一層插入圖片 
                             $('#game').append(mv)
@@ -235,11 +290,11 @@
                             move(mv)
                         }
 
-                        // 隨機數字 >5 且 圖片數目 < 20 時產生 友軍
-                        if (rand > 5 && $('#game img').length < 40) {
+                        // 隨機數字 >5 且 圖片數目 < 30 時產生 友軍
+                        if (rand > 5 && $('#game img').length < 30) {
 
                             // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                            const mv = $(`<img src="./ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
+                            const mv = $(`<img src="./images/ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
 
                             // 在遊戲區域下一層插入圖片 
                             $('#game').append(mv)
@@ -249,10 +304,10 @@
                         }
 
                         // 隨機數字 >8 且 圖片數目 < 20 時產生 補包
-                        if (rand > 8 && $('#game img').length < 40) {
+                        if (rand > 8 && $('#game img').length < 30) {
 
                             // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                            const mv = $(`<img src="./heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
+                            const mv = $(`<img src="./images/heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
 
                             // 在遊戲區域下一層插入圖片 
                             $('#game').append(mv)
@@ -261,8 +316,9 @@
                             move(mv)
                         }
 
-                        // 時間到
+                        // 遊戲時間到要做的事-----------------------------------------------------------------------
                         if (countdown <= 0) {
+                            // 停止倒數
                             clearInterval(timer)
 
                             // 使用 sweetalert 套件
@@ -278,6 +334,7 @@
                             // 開始按鈕 開放
                             $(this).attr('disabled', false)
 
+                            // 若目前分數大於最高分
                             if (score > highscore.score) {
 
                                 // 改掉分數和使用者名稱(變數)
@@ -293,7 +350,6 @@
                                 // 將最高分的紀錄存進網頁 localStorage.setItem(存 wam 的資料在網頁中 關機後不會消失) value 必須是文字
                                 localStorage.setItem('space', JSON.stringify(highscore))
                             }
-
                         }
                     }, 1000);
                 }
@@ -303,15 +359,13 @@
         // 點擊到敵人時要做的事-----------------------------------------------------------------------------------------
         $('#game').on('click', '#com', function (event) {
             // 點擊到敵人時換圖片
-            $(this).attr('src', './replace1.png')
+            $(this).attr('src', './images/replace1.png')
             $(this).stop()
             $(this).animate({
                 width: '-=120px',
                 height: '-=120px',
                 opacity: '-=0.5'
             }, 1000)
-
-
 
             // 忽略點擊事件、無法點擊和選取
             $(this).css({
@@ -334,7 +388,7 @@
         $('#game').on('click', '#ally', function () {
 
             // 點擊到友軍時換圖片
-            $(this).attr('src', './replace2.png')
+            $(this).attr('src', './images/replace2.png')
             $(this).stop()
             $(this).animate({
                 width: '-=120px',
@@ -363,7 +417,7 @@
         $('#game').on('click', '#heal', function () {
 
             // 點擊到補包時換圖片
-            $(this).attr('src', './replace3.png')
+            $(this).attr('src', './images/replace3.png')
             $(this).stop()
             $(this).animate({
                 width: '-=120px',
