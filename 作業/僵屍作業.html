@@ -57,6 +57,12 @@
             top: 550px;
         }
 
+        #count {
+            position: absolute;
+            left: 47.5%;
+            color: white;
+            font-size: 40px;
+        }
 
         p {
             color: lightskyblue;
@@ -105,6 +111,7 @@
         <br>
         <br>
         <p>Time:<span id="text-time">-</span> Sec</p>
+        <p id="count"><span id="count-time"></span></p>
         <p>Score: <span id="text-score">-</span> Points</p>
         <br>
         <p>World Records:</p>
@@ -121,10 +128,15 @@
         // 遊戲時間
         let countdown = 30
 
+        let countdown1 = 3
+
         // 倒數計時
         // 倒數計時 因為 clearInterval 會把變數也一起清掉 所以設定 timer=0
         let timer = 0
 
+
+
+        let fire = 0
 
         let highscore = { name: '', score: 0 }
 
@@ -145,130 +157,148 @@
             })
         }
 
+
         $('#fire').hide()
-        // 點擊開始按鈕要做的事----------------------------------------------------------------------------------
+
+
+        $('#count-time').hide()
+
+        // 點擊開始按鈕要做的事-------------------------------------------------------------------------------------------
         $('#btn-start').click(function (event) {
 
             // 開始按鈕 關閉
             $(this).attr('disabled', true)
 
-            // 重設參數
-            score = 0
-            $('#text-score').text(score)
-            countdown = 30
-            $('#text-time').text(countdown)
-
-
-            // 移動滑鼠時改變玩家位置
-            $('#game').mousemove(function (event) {
-
-                let mouseX = event.pageX
-                // 讓玩家位置不要超出邊界
-                if (mouseX > window.innerWidth - 80) {
-                    mouseX = window.innerWidth - 40
-                }
-                else if (mouseX <= 80) {
-                    mouseX = 40
-                }
-                $('#me').css('left', `${mouseX - 140}px`)
-            })
-
-            // 點擊開火
-            $('#game').click(function (event) {
-                let mouseX = event.pageX
-                if ($('#btn-start').attr('disabled') == 'disabled') {
-                    $('#fire').css('left', `${mouseX}px`)
-                    $('#fire').show().animate({ top: '-=500px' }).fadeOut('fast', function () {
-                        $(this).css('top', '+=500px')
-                    })
-                }
-            })
-
+            // 開始遊戲前先倒數3秒
             timer = setInterval(() => {
-                // 倒數
-                countdown--
-                $('#text-time').text(countdown)
+                $('#count-time').fadeIn('slow')
+                countdown1--
+                $('#count-time').text(countdown1)
+                $('#count-time').animate({
+                    fontSize: '60px'
+                }, 3000)
 
-                // 0~10 隨機產生
-                let rand = Math.round(Math.random() * 10)
+                // 移動滑鼠時改變玩家位置
+                $('#game').mousemove(function (event) {
 
-                // 隨機數字 >4 且 殭屍數目 < 20 時產生 敵人
-                if (rand > 4 && $('#game img').length < 40) {
+                    let mouseX = event.pageX
+                    // 讓玩家位置不要超出邊界
+                    if (mouseX > window.innerWidth - 80) {
+                        mouseX = window.innerWidth - 40
+                    }
+                    else if (mouseX <= 80) {
+                        mouseX = 40
+                    }
+                    $('#me').css('left', `${mouseX - 140}px`)
+                })
 
-                    // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                    const mv = $(`<img src="./com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
-
-                    // 在遊戲區域下一層插入圖片 
-                    $('#game').append(mv)
-
-                    // 讓圖片跑遞迴
-                    move(mv)
-                }
-
-                // 隨機數字 >5 且 圖片數目 < 20 時產生 友軍
-                if (rand > 5 && $('#game img').length < 40) {
-
-                    // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                    const mv = $(`<img src="./ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
-
-                    // 在遊戲區域下一層插入圖片 
-                    $('#game').append(mv)
-
-                    // 讓圖片跑遞迴
-                    move(mv)
-                }
-
-                // 隨機數字 >8 且 圖片數目 < 20 時產生 補包
-                if (rand > 8 && $('#game img').length < 40) {
-
-                    // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
-                    const mv = $(`<img src="./heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
-
-                    // 在遊戲區域下一層插入圖片 
-                    $('#game').append(mv)
-
-                    // 讓圖片跑遞迴
-                    move(mv)
-                }
-
-                // 時間到
-                if (countdown <= 0) {
+                // 點擊開火
+                $('#game').click(function (event) {
+                    let mouseX = event.pageX
+                    if ($('#btn-start').attr('disabled') == 'disabled') {
+                        $('#fire').css('left', `${mouseX}px`)
+                        $('#fire').show().animate({ top: '-=500px' }).fadeOut('fast', function () {
+                            $(this).css('top', '+=500px')
+                        })
+                    }
+                })
+                if (countdown1 <= 0) {
+                    $('#count').fadeOut('slow')
                     clearInterval(timer)
 
-                    // 使用 sweetalert 套件
-                    Swal.fire({
-                        icon: 'success',
-                        title: '時間到',
-                        text: `你得到 ${score} 分`
-                    })
 
-                    // 時間到 清空遊戲區域
-                    $('#game img').remove()
 
-                    // 開始按鈕 開放
-                    $(this).attr('disabled', false)
+                    // 重設參數
+                    score = 0
+                    $('#text-score').text(score)
+                    countdown = 30
+                    $('#text-time').text(countdown)
 
-                    if (score > highscore.score) {
+                    timer = setInterval(() => {
+                        // 倒數
+                        countdown--
+                        $('#text-time').text(countdown)
 
-                        // 改掉分數和使用者名稱(變數)
-                        highscore.score = score
-                        highscore.name = prompt('最高分! 請輸入名字')
-                        if (highscore.name === null || highscore.name.length === 0) {
-                            highscore.name = 'None'
+                        // 0~10 隨機產生
+                        let rand = Math.round(Math.random() * 10)
+
+                        // 隨機數字 >4 且 殭屍數目 < 20 時產生 敵人
+                        if (rand > 4 && $('#game img').length < 40) {
+
+                            // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
+                            const mv = $(`<img src="./com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
+
+                            // 在遊戲區域下一層插入圖片 
+                            $('#game').append(mv)
+
+                            // 讓圖片跑遞迴
+                            move(mv)
                         }
-                        // 改掉分數和使用者名稱(網頁上的元素)
-                        $('#highscore-player').text(`${highscore.name}`)
-                        $('#highscore-score').text(`${highscore.score}`)
 
-                        // 將最高分的紀錄存進網頁 localStorage.setItem(存 wam 的資料在網頁中 關機後不會消失) value 必須是文字
-                        localStorage.setItem('space', JSON.stringify(highscore))
-                    }
+                        // 隨機數字 >5 且 圖片數目 < 20 時產生 友軍
+                        if (rand > 5 && $('#game img').length < 40) {
 
+                            // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
+                            const mv = $(`<img src="./ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
+
+                            // 在遊戲區域下一層插入圖片 
+                            $('#game').append(mv)
+
+                            // 讓圖片跑遞迴
+                            move(mv)
+                        }
+
+                        // 隨機數字 >8 且 圖片數目 < 20 時產生 補包
+                        if (rand > 8 && $('#game img').length < 40) {
+
+                            // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
+                            const mv = $(`<img src="./heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
+
+                            // 在遊戲區域下一層插入圖片 
+                            $('#game').append(mv)
+
+                            // 讓圖片跑遞迴
+                            move(mv)
+                        }
+
+                        // 時間到
+                        if (countdown <= 0) {
+                            clearInterval(timer)
+
+                            // 使用 sweetalert 套件
+                            Swal.fire({
+                                icon: 'success',
+                                title: '時間到',
+                                text: `你得到 ${score} 分`
+                            })
+
+                            // 時間到 清空遊戲區域
+                            $('#game img').remove()
+
+                            // 開始按鈕 開放
+                            $(this).attr('disabled', false)
+
+                            if (score > highscore.score) {
+
+                                // 改掉分數和使用者名稱(變數)
+                                highscore.score = score
+                                highscore.name = prompt('最高分! 請輸入名字')
+                                if (highscore.name === null || highscore.name.length === 0) {
+                                    highscore.name = 'None'
+                                }
+                                // 改掉分數和使用者名稱(網頁上的元素)
+                                $('#highscore-player').text(`${highscore.name}`)
+                                $('#highscore-score').text(`${highscore.score}`)
+
+                                // 將最高分的紀錄存進網頁 localStorage.setItem(存 wam 的資料在網頁中 關機後不會消失) value 必須是文字
+                                localStorage.setItem('space', JSON.stringify(highscore))
+                            }
+
+                        }
+                    }, 1000);
                 }
-            }, 1000);
-            console.log(event);
+            }, 1000)
         })
-
 
         // 點擊到敵人時要做的事-----------------------------------------------------------------------------------------
         $('#game').on('click', '#com', function (event) {
