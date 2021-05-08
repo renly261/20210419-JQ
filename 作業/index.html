@@ -28,7 +28,7 @@
             position: absolute;
             color: rgb(209, 95, 209);
             left: 35%;
-            top: 40%;
+            top: 45%;
             text-align: center;
             font-size: 18px;
             letter-spacing: 10px;
@@ -77,7 +77,7 @@
         /* 資訊區 */
         .box-info {
             position: absolute;
-            top: 65%;
+            top: 75%;
             height: 10%;
         }
 
@@ -277,39 +277,39 @@
                         // 0~10 隨機產生
                         let rand = Math.round(Math.random() * 10)
 
-                        // 隨機數字 >4 且 殭屍數目 < 30 時產生 敵人
-                        if (rand > 4 && $('#game img').length < 40) {
+                        // 隨機數字 >3 且 殭屍數目 < 30 時產生 敵人
+                        if (rand > 3 && $('#game img').length < 30) {
 
                             // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                             const mv = $(`<img src="./images/com.png" alt="" id="com" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 70)}%">`)
 
-                            // 在遊戲區域下一層插入圖片 
+                            // 在遊戲區域下一層插入圖片
                             $('#game').append(mv)
 
                             // 讓圖片跑遞迴
                             move(mv)
                         }
 
-                        // 隨機數字 >5 且 圖片數目 < 30 時產生 友軍
-                        if (rand > 5 && $('#game img').length < 30) {
+                        // 隨機數字 >4 且 圖片數目 < 30 時產生 友軍
+                        if (rand > 4 && $('#game img').length < 30) {
 
                             // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                             const mv = $(`<img src="./images/ally.png" alt="" id="ally" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
 
-                            // 在遊戲區域下一層插入圖片 
+                            // 在遊戲區域下一層插入圖片
                             $('#game').append(mv)
 
                             // 讓圖片跑遞迴
                             move(mv)
                         }
 
-                        // 隨機數字 >8 且 圖片數目 < 20 時產生 補包
+                        // 隨機數字 >8 且 圖片數目 < 30 時產生 補包
                         if (rand > 8 && $('#game img').length < 30) {
 
                             // style 後面是隨機出現位置 *70%是防止圖片超出遊戲範圍
                             const mv = $(`<img src="./images/heal.png" alt="" id="heal" style="left:${Math.round(Math.random() * 70)}%;top:${Math.round(Math.random() * 50)}%">`)
 
-                            // 在遊戲區域下一層插入圖片 
+                            // 在遊戲區域下一層插入圖片
                             $('#game').append(mv)
 
                             // 讓圖片跑遞迴
